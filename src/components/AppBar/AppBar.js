@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Button, Container } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import UserMenu from '../UserMenu';
 import AuthNav from '../AuthNav';
 import { authSelectors } from '../../redux/auth';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,8 +23,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AppBarComp = ({ isAuthenticated }) => {
+export default function AppBarComp() {
   const classes = useStyles();
+
+  const isLoggedIn = useSelector(authSelectors.getIsAuthenticated);
 
   return (
     <div className={classes.root}>
@@ -42,7 +44,7 @@ const AppBarComp = ({ isAuthenticated }) => {
               Main
             </Typography>
 
-            {isAuthenticated && (
+            {isLoggedIn && (
               <Typography
                 variant="h6"
                 color="inherit"
@@ -55,16 +57,10 @@ const AppBarComp = ({ isAuthenticated }) => {
               </Typography>
             )}
 
-            {isAuthenticated ? <UserMenu /> : <AuthNav />}
+            {isLoggedIn ? <UserMenu /> : <AuthNav />}
           </Toolbar>
         </Container>
       </AppBar>
     </div>
   );
-};
-
-const mapStateToProps = state => ({
-  isAuthenticated: authSelectors.getIsAuthenticated(state),
-});
-
-export default connect(mapStateToProps)(AppBarComp);
+}

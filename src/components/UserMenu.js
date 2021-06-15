@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button } from '@material-ui/core';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authOperations, authSelectors } from '../redux/auth';
 
-const UserMenu = ({ name, onLogOut }) => {
+export default function UserMenu() {
+  const dispatch = useDispatch;
+  const name = useSelector(authSelectors.getUserName);
+
+  const onLogOut = useCallback(() => {
+    dispatch(authOperations.logOut());
+  }, [dispatch]);
+
   return (
     <>
       <div>
@@ -14,13 +21,4 @@ const UserMenu = ({ name, onLogOut }) => {
       </Button>
     </>
   );
-};
-
-const mapStateToProps = state => ({
-  name: authSelectors.getUserName(state),
-});
-
-const mapDispatchToProps = {
-  onLogOut: authOperations.logOut,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(UserMenu);
+}
