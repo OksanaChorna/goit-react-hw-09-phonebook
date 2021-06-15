@@ -1,44 +1,55 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { contactsOperations, contactsSelectors } from '../../redux/contacts';
-import PropsType from 'prop-types';
 import style from './ContactsForm.module.css';
 import shortid from 'shortid';
 
-// const mapDispatchToProps = dispatch => ({
-//   onSubmit: ({ name, number }) =>
-//     dispatch(contactsOperations.addContact({ name, number })),
-// });
-
-export default function ContactsForm({ onSubmit }) {
+export default function ContactsForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
   const items = useSelector(contactsSelectors.getAllContacts);
+
+  const dispatch = useDispatch();
 
   const nameInputId = shortid.generate();
   const numberInputId = shortid.generate();
 
   const handleChange = event => {
     const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
-  };
 
-  const handleSubmit = event => {
-    event.preventDefault();
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
 
-    const hasContacts = contact =>
-      contact.name === this.state.name || contact.number === this.state.number;
+      case 'number':
+        setNumber(value);
+        break;
 
-    if (items.some(hasContacts)) {
-      alert(`Contact is already in contacts`);
-      return;
+      default:
+        console.warn(`Field type ${name} is not processed`);
     }
-
-    onSubmit({ ...this.state });
-
-    reset();
   };
+
+  const handleSubmit = useCallback(
+    event => {
+      event.preventDefault();
+
+      const hasContacts = contact =>
+        contact.name === name || contact.number === number;
+
+      if (items.some(hasContacts)) {
+        alert(`Contact is already in contacts`);
+        return;
+      }
+
+      dispatch(contactsOperations.addContact({ name, number }));
+
+      reset();
+    },
+    [dispatch, items, name, number],
+  );
 
   const reset = () => {
     setName('');
@@ -79,7 +90,3 @@ export default function ContactsForm({ onSubmit }) {
     </form>
   );
 }
-
-ContactsForm.PropsType = {
-  onSubmit: PropsType.func.isRequired,
-};

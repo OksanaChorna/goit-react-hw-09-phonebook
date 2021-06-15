@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,8 +8,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { authOperations } from '../redux/auth';
 
 const styles = makeStyles(theme => ({
@@ -32,104 +31,113 @@ const styles = makeStyles(theme => ({
   },
 }));
 
-class RegisterPage extends Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
+export default function RegisterPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleChange = ({ target: { name, value } }) => {
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+
+      case 'email':
+        setEmail(value);
+        break;
+
+      case 'password':
+        setPassword(value);
+        break;
+
+      default:
+        console.warn(`Field type ${name} is not processed`);
+    }
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    console.log(name, value);
-    this.setState({ [name]: value });
-  };
+  const dispatch = useDispatch();
 
-  handleSubmit = event => {
-    event.preventDefault();
-    console.log(event);
-    this.props.onRegister(this.state);
+  const handleSubmit = useCallback(
+    event => {
+      event.preventDefault();
+      dispatch(authOperations.register({ name, email, password }));
 
-    this.setState({ name: '', email: '', password: '' });
-  };
-  render() {
-    const { name, email, password } = this.state;
+      setName('');
+      setEmail('');
+      setPassword('');
+    },
+    [dispatch, name, email, password],
+  );
 
-    // const classes = useStyles();
+  // const classes = useStyles();
 
-    return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={styles.paper}>
-          <Avatar className={styles.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <form className={styles.form} noValidate onSubmit={this.handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  // autoComplete="fname"
-                  name="name"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="firstName"
-                  type="text"
-                  label="Name"
-                  value={name}
-                  // autoFocus
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  type="email"
-                  label="Email Address"
-                  name="email"
-                  value={email}
-                  autoComplete="email"
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  value={password}
-                  autoComplete="current-password"
-                  onChange={this.handleChange}
-                />
-              </Grid>
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={styles.paper}>
+        <Avatar className={styles.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <form className={styles.form} noValidate onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                // autoComplete="fname"
+                name="name"
+                variant="outlined"
+                required
+                fullWidth
+                id="firstName"
+                type="text"
+                label="Name"
+                value={name}
+                // autoFocus
+                onChange={handleChange}
+              />
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={styles.submit}
-            >
-              Sign Up
-            </Button>
-          </form>
-        </div>
-      </Container>
-    );
-  }
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                type="email"
+                label="Email Address"
+                name="email"
+                value={email}
+                autoComplete="email"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                value={password}
+                autoComplete="current-password"
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={styles.submit}
+          >
+            Sign Up
+          </Button>
+        </form>
+      </div>
+    </Container>
+  );
 }
-
-const mapDispatchToProps = {
-  onRegister: authOperations.register,
-};
-
-export default connect(null, mapDispatchToProps)(RegisterPage);

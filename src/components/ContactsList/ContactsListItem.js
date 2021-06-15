@@ -36,5 +36,4 @@ ContactItem.prototype = {
       number: PropTypes.string.isRequired,
     }),
   ),
-  onDeleteContact: PropTypes.func,
 };

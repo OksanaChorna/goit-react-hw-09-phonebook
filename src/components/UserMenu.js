@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { authOperations, authSelectors } from '../redux/auth';
 
 export default function UserMenu() {
-  const dispatch = useDispatch;
+  const dispatch = useDispatch();
   const name = useSelector(authSelectors.getUserName);
 
   const onLogOut = useCallback(() => {

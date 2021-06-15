@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,8 +8,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authOperations } from '../redux/auth';
 
 const styles = makeStyles(theme => ({
@@ -32,87 +31,91 @@ const styles = makeStyles(theme => ({
   },
 }));
 
-class LoginPage extends Component {
-  state = {
-    email: '',
-    password: '',
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleChange = ({ target: { name, value } }) => {
+    switch (name) {
+      case 'email':
+        setEmail(value);
+        break;
+
+      case 'password':
+        setPassword(value);
+        break;
+
+      default:
+        console.warn(`Field type ${name} is not processed`);
+    }
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
-  };
+  const dispatch = useDispatch();
+  const handleSubmit = useCallback(
+    event => {
+      event.preventDefault();
+      dispatch(authOperations.logIn({ email, password }));
 
-  handleSubmit = event => {
-    event.preventDefault();
+      setEmail('');
+      setPassword('');
+    },
+    [dispatch, email, password],
+  );
 
-    this.props.onLogin(this.state);
+  // const classes = useStyles();
 
-    this.setState({ name: '', email: '', password: '' });
-  };
-  render() {
-    // const classes = useStyles();
-
-    const { email, password } = this.state;
-
-    return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={styles.paper}>
-          <Avatar className={styles.avatar}>
-            <LockOpenIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <form className={styles.form} noValidate onSubmit={this.handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  type="email"
-                  name="email"
-                  value={email}
-                  autoComplete="email"
-                  onChange={this.handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  value={password}
-                  autoComplete="current-password"
-                  onChange={this.handleChange}
-                />
-              </Grid>
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={styles.paper}>
+        <Avatar className={styles.avatar}>
+          <LockOpenIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <form className={styles.form} noValidate onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                type="email"
+                name="email"
+                value={email}
+                autoComplete="email"
+                onChange={handleChange}
+              />
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={styles.submit}
-            >
-              Sign In
-            </Button>
-          </form>
-        </div>
-      </Container>
-    );
-  }
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                value={password}
+                autoComplete="current-password"
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={styles.submit}
+          >
+            Sign In
+          </Button>
+        </form>
+      </div>
+    </Container>
+  );
 }
-
-const mapDispatchToProps = {
-  onLogin: authOperations.logIn,
-};
-
-export default connect(null, mapDispatchToProps)(LoginPage);
