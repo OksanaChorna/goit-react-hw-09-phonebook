@@ -2,7 +2,7 @@ import { Container } from '@material-ui/core';
 
 const HomePage = () => (
   <Container maxWidth="lg">
-    <h1>Hello! Welcome to your PhoneBook :)</h1>
+    <h1 className="mainTitle">Hello! Welcome to your PhoneBook :)</h1>
   </Container>
 );
 
