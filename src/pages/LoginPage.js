@@ -8,7 +8,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { authOperations } from '../redux/auth';
 
 const styles = makeStyles(theme => ({
@@ -68,11 +68,14 @@ export default function LoginPage() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={styles.paper}>
-        <Avatar className={styles.avatar}>
+        <Avatar
+          className={styles.avatar}
+          style={{ marginLeft: 'auto', marginRight: 'auto', marginTop: 20 }}
+        >
           <LockOpenIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Sign in
         </Typography>
         <form className={styles.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>

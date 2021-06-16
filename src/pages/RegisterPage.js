@@ -75,7 +75,10 @@ export default function RegisterPage() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={styles.paper}>
-        <Avatar className={styles.avatar}>
+        <Avatar
+          className={styles.avatar}
+          style={{ marginLeft: 'auto', marginRight: 'auto', marginTop: 20 }}
+        >
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
