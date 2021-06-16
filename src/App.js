@@ -1,10 +1,11 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { authOperations } from './redux/auth';
 import AppBarComp from './components/AppBar/AppBar';
 import PrivateRoute from './components/PrivateRoute';
 import PablicRoute from './components/PublicRoute';
+import PublicRoute from './components/PublicRoute';
 
 const HomePage = lazy(() =>
   import('./pages/HomePage' /* webpackChunkName: "home-page" */),
@@ -31,24 +32,18 @@ export default function App() {
       <AppBarComp />
       <Suspense fallback={<p>Wait...</p>}>
         <Switch>
-          <Route exact path="/" component={HomePage} />
-          <PablicRoute
-            path="/register"
-            restricted
-            redirectTo="/contacts"
-            component={RegisterPage}
-          />
-          <PablicRoute
-            path="/login"
-            restricted
-            redirectTo="/contacts"
-            component={LoginPage}
-          />
-          <PrivateRoute
-            path="/contacts"
-            redirectTo="/login"
-            component={ContactsPage}
-          />
+          <PublicRoute exact path="/">
+            <HomePage />
+          </PublicRoute>
+          <PablicRoute path="/register" restricted redirectTo="/contacts">
+            <RegisterPage />
+          </PablicRoute>
+          <PablicRoute path="/login" restricted redirectTo="/contacts">
+            <LoginPage />
+          </PablicRoute>
+          <PrivateRoute path="/contacts" redirectTo="/login">
+            <ContactsPage />
+          </PrivateRoute>
           <Redirect to="/" />
         </Switch>
       </Suspense>

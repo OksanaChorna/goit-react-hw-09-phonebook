@@ -15,3 +15,8 @@ code {
 #toolbar-menu a.active {
   color: rgb(255 197 68);
 }
+
+h1 {
+  text-align: center;
+  margin-top: 150px;
+}
