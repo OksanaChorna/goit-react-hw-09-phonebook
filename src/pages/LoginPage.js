@@ -11,7 +11,7 @@ import Container from '@material-ui/core/Container';
 import { useDispatch } from 'react-redux';
 import { authOperations } from '../redux/auth';
 
-const styles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -62,22 +62,19 @@ export default function LoginPage() {
     [dispatch, email, password],
   );
 
-  // const classes = useStyles();
+  const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={styles.paper}>
-        <Avatar
-          className={styles.avatar}
-          style={{ marginLeft: 'auto', marginRight: 'auto', marginTop: 20 }}
-        >
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
           <LockOpenIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={styles.form} noValidate onSubmit={handleSubmit}>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -113,7 +110,7 @@ export default function LoginPage() {
             fullWidth
             variant="contained"
             color="primary"
-            className={styles.submit}
+            className={classes.submit}
           >
             Sign In
           </Button>
